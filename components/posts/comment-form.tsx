@@ -13,6 +13,7 @@ export function CommentForm({ postId }: CommentFormProps) {
   const supabase = createClient();
 
   const [content, setContent] = useState("");
+  const [anonymous, setAnonymous] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,22 +28,35 @@ export function CommentForm({ postId }: CommentFormProps) {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        setError("Ban can dang nhap de binh luan");
+        setError("Bạn cần đăng nhập để bình luận");
         return;
       }
 
-      const { error } = await supabase.from("comments").insert({
-        post_id: postId,
-        author_id: user.id,
-        content,
+      const response = await fetch("/api/comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId,
+          content: content.trim(),
+          anonymous,
+        }),
       });
 
-      if (error) throw error;
+      const payload = (await response.json().catch(() => null)) as {
+        error?: string;
+      } | null;
+
+      if (!response.ok) {
+        throw new Error(payload?.error || "Không thể gửi bình luận");
+      }
 
       setContent("");
+      setAnonymous(false);
       router.refresh();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Co loi xay ra";
+      const message = err instanceof Error ? err.message : "Có lỗi xảy ra";
       setError(message);
     } finally {
       setLoading(false);
@@ -50,9 +64,12 @@ export function CommentForm({ postId }: CommentFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/70"
+    >
       {error && (
-        <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-900/20 dark:text-red-300">
           {error}
         </div>
       )}
@@ -63,17 +80,31 @@ export function CommentForm({ postId }: CommentFormProps) {
           onChange={(e) => setContent(e.target.value)}
           required
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Viet binh luan cua ban..."
+          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500"
+          placeholder="Viết bình luận của bạn..."
         />
       </div>
+
+      <label className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
+        <input
+          type="checkbox"
+          checked={anonymous}
+          onChange={(e) => setAnonymous(e.target.checked)}
+          className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+        />
+        Đăng ẩn danh
+      </label>
+
+      <p className="text-xs text-slate-500 dark:text-slate-400">
+        Nếu không chọn, bình luận sẽ hiển thị tên của bạn từ hồ sơ.
+      </p>
 
       <button
         type="submit"
         disabled={loading || !content.trim()}
-        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="inline-flex items-center justify-center rounded-xl bg-linear-to-r from-blue-600 to-purple-600 px-4 py-2.5 font-semibold text-white shadow-md transition-all hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {loading ? "Dang gui..." : "Gui binh luan"}
+        {loading ? "Đang gửi..." : "Gửi bình luận"}
       </button>
     </form>
   );

@@ -16,6 +16,8 @@ export interface Post {
   content: string | null;
   excerpt: string | null;
   status: PostStatus;
+  is_anonymous: boolean;
+  comments_enabled: boolean;
   created_at: string;
   updated_at: string;
   published_at: string | null;
@@ -29,4 +31,17 @@ export interface Comment {
   content: string;
   created_at: string;
   profiles?: Profile;
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  actor_id: string;
+  type: "comment" | "reaction";
+  post_id: string;
+  comment_id: string | null;
+  reaction: string | null;
+  message: string;
+  read_at: string | null;
+  created_at: string;
 }

@@ -32,8 +32,8 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Chinh sua bai viet</h1>
-      <PostForm post={post as Post} />
+      <h1 className="text-3xl font-bold mb-8">Chỉnh sửa bài viết</h1>
+      <PostForm post={post as Post} authorId={user.id} />
     </main>
   );
 }

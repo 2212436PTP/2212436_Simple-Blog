@@ -12,29 +12,33 @@ export function PostList({ posts }: PostListProps) {
       {posts.map((post) => (
         <div
           key={post.id}
-          className="bg-white p-4 rounded-lg shadow border border-gray-200"
+          className="overflow-hidden rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/70"
         >
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <h2 className="text-xl font-semibold">{post.title}</h2>
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
+                  {post.title}
+                </h2>
                 <span
                   className={`px-2 py-1 text-xs rounded-full ${
                     post.status === "published"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-yellow-100 text-yellow-800"
+                      ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-200"
+                      : "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-200"
                   }`}
                 >
-                  {post.status === "published" ? "Da xuat ban" : "Ban nhap"}
+                  {post.status === "published" ? "Đã xuất bản" : "Bản nháp"}
                 </span>
               </div>
 
               {post.excerpt && (
-                <p className="text-gray-600 text-sm mb-2">{post.excerpt}</p>
+                <p className="mb-2 text-sm text-slate-600 dark:text-slate-300">
+                  {post.excerpt}
+                </p>
               )}
 
-              <p className="text-gray-400 text-xs">
-                Tao ngay:{" "}
+              <p className="text-xs text-slate-400 dark:text-slate-500">
+                Tạo ngày:{" "}
                 {new Date(post.created_at).toLocaleDateString("vi-VN")}
               </p>
             </div>
@@ -42,15 +46,15 @@ export function PostList({ posts }: PostListProps) {
             <div className="flex items-center gap-2">
               <Link
                 href={`/posts/${post.slug}`}
-                className="text-gray-500 hover:text-gray-700 px-3 py-1 text-sm"
+                className="px-3 py-1 text-sm text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
               >
                 Xem
               </Link>
               <Link
                 href={`/dashboard/edit/${post.id}`}
-                className="text-blue-600 hover:text-blue-500 px-3 py-1 text-sm"
+                className="px-3 py-1 text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400"
               >
-                Sua
+                Sửa
               </Link>
               <DeletePostButton postId={post.id} postTitle={post.title} />
             </div>

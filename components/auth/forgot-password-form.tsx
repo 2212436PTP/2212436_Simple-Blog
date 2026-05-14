@@ -28,9 +28,9 @@ export function ForgotPasswordForm() {
         return;
       }
 
-      setMessage("Da gui email dat lai mat khau. Vui long kiem tra hop thu.");
+      setMessage("Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.");
     } catch {
-      setError("Co loi xay ra. Vui long thu lai.");
+      setError("Có lỗi xảy ra. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -72,13 +72,13 @@ export function ForgotPasswordForm() {
         disabled={loading}
         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? "Dang gui..." : "Gui link dat lai mat khau"}
+        {loading ? "Đang gửi..." : "Gửi link đặt lại mật khẩu"}
       </button>
 
       <p className="text-center text-sm text-gray-600">
-        Quay lai{" "}
+        Quay lại{" "}
         <Link href="/login" className="text-blue-600 hover:text-blue-500">
-          dang nhap
+          đăng nhập
         </Link>
       </p>
     </form>

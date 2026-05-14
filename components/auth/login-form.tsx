@@ -2,12 +2,14 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+  const justRegistered = searchParams.get("registered") === "1";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,7 +28,15 @@ export function LoginForm() {
       });
 
       if (error) {
-        setError(error.message);
+        // Map Supabase error messages to Vietnamese
+        let errorMsg = error.message;
+        if (error.message.includes("Email not confirmed")) {
+          errorMsg =
+            "Email của bạn chưa được xác nhận. Vui lòng kiểm tra email và click link xác nhận.";
+        } else if (error.message.includes("Invalid login credentials")) {
+          errorMsg = "Email hoặc mật khẩu không đúng.";
+        }
+        setError(errorMsg);
         return;
       }
 
@@ -35,7 +45,7 @@ export function LoginForm() {
         router.refresh();
       }
     } catch {
-      setError("Co loi xay ra. Vui long thu lai.");
+      setError("Có lỗi xảy ra. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -58,9 +68,17 @@ export function LoginForm() {
 
   return (
     <div className="mt-8 space-y-6">
+      {justRegistered && (
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+          <p className="text-green-700 dark:text-green-400 text-sm font-medium">
+            ✓ Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.
+          </p>
+        </div>
+      )}
+
       {error && (
-        <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
-          {error}
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
         </div>
       )}
 
@@ -68,7 +86,7 @@ export function LoginForm() {
         <button
           type="button"
           onClick={handleGitHubLogin}
-          className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-gray-300 dark:border-slate-600 rounded-lg shadow-sm text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -77,16 +95,18 @@ export function LoginForm() {
               clipRule="evenodd"
             />
           </svg>
-          Dang nhap voi GitHub
+          Đăng nhập với GitHub
         </button>
       </div>
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300" />
+          <div className="w-full border-t border-gray-300 dark:border-slate-600" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Hoac</span>
+          <span className="px-2 bg-white dark:bg-slate-950 text-gray-500 dark:text-gray-400">
+            Hoặc
+          </span>
         </div>
       </div>
 
@@ -94,7 +114,7 @@ export function LoginForm() {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
           >
             Email
           </label>
@@ -104,7 +124,7 @@ export function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-2 block w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="email@example.com"
           />
         </div>
@@ -112,9 +132,9 @@ export function LoginForm() {
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
           >
-            Mat khau
+            Mật khẩu
           </label>
           <input
             id="password"
@@ -122,15 +142,15 @@ export function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-2 block w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="••••••••"
           />
-          <div className="mt-2 text-right">
+          <div className="mt-3 text-right">
             <Link
               href="/forgot-password"
-              className="text-sm text-blue-600 hover:text-blue-500"
+              className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium"
             >
-              Quen mat khau?
+              Quên mật khẩu?
             </Link>
           </div>
         </div>
@@ -138,16 +158,19 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex justify-center py-3 px-4 rounded-lg shadow-md text-base font-semibold text-white bg-linear-to-r from-blue-600 to-purple-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
         >
-          {loading ? "Dang xu ly..." : "Dang nhap"}
+          {loading ? "Đang xử lý..." : "Đăng nhập"}
         </button>
       </form>
 
-      <p className="text-center text-sm text-gray-600">
-        Chua co tai khoan?{" "}
-        <Link href="/register" className="text-blue-600 hover:text-blue-500">
-          Dang ky ngay
+      <p className="text-center text-sm text-gray-700 dark:text-gray-300">
+        Chưa có tài khoản?{" "}
+        <Link
+          href="/register"
+          className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-semibold"
+        >
+          Đăng ký ngay
         </Link>
       </p>
     </div>
