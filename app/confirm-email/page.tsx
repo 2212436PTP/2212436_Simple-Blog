@@ -1,10 +1,10 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 
-export default function ConfirmEmailPage() {
+function ConfirmEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email") || "";
@@ -140,5 +140,19 @@ export default function ConfirmEmailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ConfirmEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-linear-to-b from-white to-gray-50 dark:from-slate-900 dark:to-slate-950 flex items-center justify-center px-4">
+          <p className="text-sm text-slate-500 dark:text-slate-400">Đang tải...</p>
+        </div>
+      }
+    >
+      <ConfirmEmailContent />
+    </Suspense>
   );
 }

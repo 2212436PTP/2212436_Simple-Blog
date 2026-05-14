@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { PostList } from "@/components/dashboard/post-list";
 import type { Post } from "@/types/database";
 
-export default function DashboardPage() {
+function DashboardContent() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const [posts, setPosts] = useState<Post[]>([]);
@@ -115,5 +115,19 @@ export default function DashboardPage() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="max-w-4xl mx-auto px-4 py-8">
+          <div className="text-center text-gray-500">Đang tải...</div>
+        </main>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
   );
 }

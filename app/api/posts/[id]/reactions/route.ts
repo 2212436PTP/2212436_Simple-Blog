@@ -7,6 +7,10 @@ type ReactionKey = "like" | "love" | "wow" | "haha" | "sad";
 
 const VALID_REACTIONS: ReactionKey[] = ["like", "love", "wow", "haha", "sad"];
 
+function isReactionKey(value: unknown): value is ReactionKey {
+  return typeof value === "string" && VALID_REACTIONS.includes(value as ReactionKey);
+}
+
 function getAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -55,10 +59,10 @@ export async function GET(
   let selected: ReactionKey | null = null;
 
   for (const row of data || []) {
-    if (VALID_REACTIONS.includes(row.reaction)) {
+    if (isReactionKey(row.reaction)) {
       counts[row.reaction] += 1;
       if (user && row.user_id === user.id) {
-        selected = row.reaction as ReactionKey;
+        selected = row.reaction;
       }
     }
   }

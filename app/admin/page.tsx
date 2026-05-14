@@ -3,6 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AdminPanel } from "@/components/admin/admin-panel";
 
+function getRelationValue<T>(value: T | T[] | null | undefined): T | null {
+  if (!value) {
+    return null;
+  }
+
+  return Array.isArray(value) ? value[0] || null : value;
+}
+
 export default async function AdminPage() {
   const supabase = await createClient();
 
@@ -82,27 +90,35 @@ export default async function AdminPage() {
       </p>
       <AdminPanel
         users={users}
-        posts={(posts || []).map((post) => ({
-          id: post.id,
-          title: post.title,
-          status: post.status,
-          created_at: post.created_at,
-          authorName:
-            (post.profiles &&
-              (post.profiles.display_name ?? post.profiles[0]?.display_name)) ||
-            "Ẩn danh",
-        }))}
-        comments={(comments || []).map((comment) => ({
-          id: comment.id,
-          content: comment.content,
-          created_at: comment.created_at,
-          authorName:
-            (comment.profiles &&
-              (comment.profiles.display_name ??
-                comment.profiles[0]?.display_name)) ||
-            "Ẩn danh",
-          postTitle: comment.posts?.title || "Bài viết",
-        }))}
+        posts={(posts || []).map((post) => {
+          const profile = getRelationValue(
+            post.profiles as { display_name?: string | null } | { display_name?: string | null }[] | null,
+          );
+
+          return {
+            id: post.id,
+            title: post.title,
+            status: post.status,
+            created_at: post.created_at,
+            authorName: profile?.display_name || "Ẩn danh",
+          };
+        })}
+        comments={(comments || []).map((comment) => {
+          const profile = getRelationValue(
+            comment.profiles as { display_name?: string | null } | { display_name?: string | null }[] | null,
+          );
+          const post = getRelationValue(
+            comment.posts as { title?: string | null } | { title?: string | null }[] | null,
+          );
+
+          return {
+            id: comment.id,
+            content: comment.content,
+            created_at: comment.created_at,
+            authorName: profile?.display_name || "Ẩn danh",
+            postTitle: post?.title || "Bài viết",
+          };
+        })}
       />
     </main>
   );
