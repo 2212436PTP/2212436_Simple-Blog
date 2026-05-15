@@ -15,6 +15,7 @@ export interface Post {
   slug: string;
   content: string | null;
   excerpt: string | null;
+  image_url: string | null;
   status: PostStatus;
   is_anonymous: boolean;
   comments_enabled: boolean;
