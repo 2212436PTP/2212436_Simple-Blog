@@ -1,14 +1,27 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Post, PostStatus } from "@/types/database";
+import mammoth from "mammoth/mammoth.browser";
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 
 interface PostFormProps {
   post?: Post;
   authorId: string;
 }
+
+type UploadState = {
+  name: string;
+  type: string;
+  message: string;
+} | null;
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
+  import.meta.url,
+).toString();
 
 function slugify(value: string) {
   return value
@@ -168,6 +181,7 @@ function renderMarkdownPreview(content: string): ReactNode[] {
 export function PostForm({ post, authorId }: PostFormProps) {
   const router = useRouter();
   const supabase = createClient();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const isEditing = !!post;
   const [title, setTitle] = useState(post?.title || "");
@@ -180,6 +194,8 @@ export function PostForm({ post, authorId }: PostFormProps) {
   );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadState, setUploadState] = useState<UploadState>(null);
 
   const buildPostData = (userId: string) => {
     const baseData = {
@@ -195,6 +211,107 @@ export function PostForm({ post, authorId }: PostFormProps) {
     };
 
     return baseData;
+  };
+
+  const readPdfText = async (file: File) => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pages: string[] = [];
+
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      const page = await pdf.getPage(pageNumber);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item) => ("str" in item ? item.str : ""))
+        .join(" ");
+      pages.push(pageText);
+    }
+
+    return pages.join("\n\n").trim();
+  };
+
+  const extractTextFromFile = async (file: File) => {
+    const fileName = file.name.toLowerCase();
+
+    if (file.type === "text/plain" || fileName.endsWith(".txt")) {
+      return file.text();
+    }
+
+    if (
+      file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      fileName.endsWith(".docx")
+    ) {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      return result.value;
+    }
+
+    if (file.type === "application/pdf" || fileName.endsWith(".pdf")) {
+      return readPdfText(file);
+    }
+
+    throw new Error("Chỉ hỗ trợ file .txt, .docx hoặc .pdf.");
+  };
+
+  const handleFileImport = async (file: File) => {
+    setError(null);
+    setUploading(true);
+    setUploadState({
+      name: file.name,
+      type: file.type || "unknown",
+      message: "Đang đọc nội dung file...",
+    });
+
+    try {
+      const text = (await extractTextFromFile(file)).trim();
+
+      if (!text) {
+        throw new Error("File không có nội dung có thể đọc được.");
+      }
+
+      setContent(text);
+      setUploadState({
+        name: file.name,
+        type: file.type || "unknown",
+        message: `Đã nhập nội dung từ ${file.name}`,
+      });
+
+      if (!excerpt.trim()) {
+        setExcerpt(text.replace(/\s+/g, " ").trim().slice(0, 180));
+      }
+
+      if (!title.trim()) {
+        const baseName = file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
+        setTitle(baseName.charAt(0).toUpperCase() + baseName.slice(1));
+      }
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Không thể đọc nội dung file đã chọn.";
+      setError(message);
+      setUploadState({
+        name: file.name,
+        type: file.type || "unknown",
+        message,
+      });
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    await handleFileImport(file);
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -234,6 +351,24 @@ export function PostForm({ post, authorId }: PostFormProps) {
       {error && (
         <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
           {error}
+        </div>
+      )}
+
+      {uploadState && (
+        <div className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-200">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="font-semibold">Nhập file</p>
+              <p className="mt-1">{uploadState.message}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setUploadState(null)}
+              className="text-xs font-semibold text-blue-700 hover:text-blue-600 dark:text-blue-300 dark:hover:text-blue-200"
+            >
+              Ẩn
+            </button>
+          </div>
         </div>
       )}
 
@@ -279,6 +414,22 @@ export function PostForm({ post, authorId }: PostFormProps) {
         >
           Nội dung
         </label>
+        <div className="mb-3 flex flex-wrap items-center gap-3">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".txt,.docx,.pdf,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              onChange={handleFileChange}
+              className="hidden"
+              disabled={uploading}
+            />
+            {uploading ? "Đang nhập file..." : "Tải file DOCX / PDF / TXT"}
+          </label>
+          <span className="text-xs text-slate-500 dark:text-slate-400">
+            File sẽ được đọc và đổ trực tiếp vào nội dung bài viết.
+          </span>
+        </div>
         <textarea
           id="content"
           value={content}
