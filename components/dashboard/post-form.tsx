@@ -18,6 +18,8 @@ type UploadState = {
   message: string;
 } | null;
 
+type ImportMode = "replace" | "append";
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
   import.meta.url,
@@ -196,6 +198,7 @@ export function PostForm({ post, authorId }: PostFormProps) {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadState, setUploadState] = useState<UploadState>(null);
+  const [importMode, setImportMode] = useState<ImportMode>("replace");
 
   const buildPostData = (userId: string) => {
     const baseData = {
@@ -257,10 +260,11 @@ export function PostForm({ post, authorId }: PostFormProps) {
   const handleFileImport = async (file: File) => {
     setError(null);
     setUploading(true);
+    const modeLabel = importMode === "append" ? "chèn vào cuối" : "thay thế nội dung";
     setUploadState({
       name: file.name,
       type: file.type || "unknown",
-      message: "Đang đọc nội dung file...",
+      message: `Đang đọc nội dung file và sẽ ${modeLabel}...`,
     });
 
     try {
@@ -270,11 +274,31 @@ export function PostForm({ post, authorId }: PostFormProps) {
         throw new Error("File không có nội dung có thể đọc được.");
       }
 
-      setContent(text);
+      setContent((currentContent) => {
+        if (importMode === "append") {
+          const existing = currentContent.trim();
+          const incoming = text.trim();
+
+          if (!existing) {
+            return incoming;
+          }
+
+          if (!incoming) {
+            return existing;
+          }
+
+          return `${existing}\n\n${incoming}`;
+        }
+
+        return text;
+      });
       setUploadState({
         name: file.name,
         type: file.type || "unknown",
-        message: `Đã nhập nội dung từ ${file.name}`,
+        message:
+          importMode === "append"
+            ? `Đã chèn nội dung từ ${file.name} vào cuối bài viết`
+            : `Đã nhập nội dung từ ${file.name}`,
       });
 
       if (!excerpt.trim()) {
@@ -415,6 +439,32 @@ export function PostForm({ post, authorId }: PostFormProps) {
           Nội dung
         </label>
         <div className="mb-3 flex flex-wrap items-center gap-3">
+          <div className="inline-flex overflow-hidden rounded-lg border border-slate-300 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+            <button
+              type="button"
+              onClick={() => setImportMode("replace")}
+              className={`px-3 py-2 text-sm font-medium transition-colors ${
+                importMode === "replace"
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+              }`}
+              disabled={uploading}
+            >
+              Thay thế
+            </button>
+            <button
+              type="button"
+              onClick={() => setImportMode("append")}
+              className={`px-3 py-2 text-sm font-medium transition-colors ${
+                importMode === "append"
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+              }`}
+              disabled={uploading}
+            >
+              Chèn cuối
+            </button>
+          </div>
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
             <input
               ref={fileInputRef}
