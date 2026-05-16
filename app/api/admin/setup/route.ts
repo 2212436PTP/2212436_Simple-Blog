@@ -26,7 +26,15 @@ function getAdminClient() {
 }
 
 export async function POST(request: Request) {
- const admin = getAdminClient();
+  // Security check for production
+  if (process.env.NODE_ENV === "production" && process.env.ALLOW_ADMIN_SETUP !== "true") {
+    return NextResponse.json(
+      { error: "Admin setup is disabled in production for security." },
+      { status: 403 },
+    );
+  }
+
+  const admin = getAdminClient();
 
  if (!admin) {
  return NextResponse.json(
