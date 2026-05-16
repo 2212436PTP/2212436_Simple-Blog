@@ -27,11 +27,12 @@ export async function POST(request: Request) {
  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
  }
 
- const body = (await request.json().catch(() => null)) as {
- postId?: string;
- content?: string;
- anonymous?: boolean;
- } | null;
+  const body = (await request.json().catch(() => null)) as {
+    postId?: string;
+    content?: string;
+    anonymous?: boolean;
+    parentId?: string | null;
+  } | null;
 
  if (!body?.postId || !body?.content?.trim()) {
  return NextResponse.json(
@@ -69,6 +70,7 @@ export async function POST(request: Request) {
  post_id: body.postId,
  author_id: user.id,
  content,
+ ...(body.parentId ? { parent_id: body.parentId } : {}),
  })
  .select("*")
  .single();

@@ -75,12 +75,12 @@ export default async function PostPage({ params }: PostPageProps) {
  : post.profiles?.display_name || "Ẩn danh";
 
  return (
- <main className="mx-auto max-w-4xl px-4 py-10">
- <article className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl backdrop-blur /80 /70">
- <div className="px-8 pt-8 sm:px-10 sm:pt-10">
- <h1 className="mb-4 text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
- {post.title}
- </h1>
+    <main className="mx-auto max-w-4xl px-4 py-10">
+      <article className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl backdrop-blur animate-fade-in-up">
+        <div className="px-6 pt-8 sm:px-10 sm:pt-10">
+          <h1 className="mb-4 text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl">
+            {post.title}
+          </h1>
 
  <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500 ">
  <span className="rounded-full bg-slate-100 px-3 py-1 ">
@@ -99,18 +99,19 @@ export default async function PostPage({ params }: PostPageProps) {
  </div>
  </div>
 
- {post.image_url && (
- <div className="w-full h-auto px-8 sm:px-10">
- {/* eslint-disable-next-line @next/next/no-img-element */}
- <img 
- src={post.image_url} 
- alt={post.title} 
- className="w-full h-auto max-h-[500px] object-cover rounded-xl shadow-md"
- />
- </div>
- )}
+      {post.image_url && (
+        <div className="w-full px-6 sm:px-10 mt-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={post.image_url}
+            alt={post.title}
+            className="w-full h-auto rounded-xl shadow-md"
+            style={{ maxHeight: '600px', objectFit: 'contain', background: '#f8fafc' }}
+          />
+        </div>
+      )}
 
- <div className="px-8 py-8 sm:px-10">
+      <div className="px-6 py-8 sm:px-10">
  <div className="prose prose-slate max-w-none ">
  {post.content
  ?.split("\n")
@@ -125,10 +126,10 @@ export default async function PostPage({ params }: PostPageProps) {
  </div>
  </article>
 
- <section className="mt-8 rounded-3xl border border-slate-200/80 bg-white/80 px-8 py-8 shadow-xl backdrop-blur /80 /70 sm:px-10">
- <h2 className="mb-6 text-2xl font-bold text-slate-950 ">
- Bình luận ({comments?.length || 0})
- </h2>
+      <section className="mt-8 rounded-3xl border border-slate-200/80 bg-white/80 px-6 py-8 shadow-xl backdrop-blur animate-fade-in-up delay-200 sm:px-10">
+        <h2 className="mb-6 text-2xl font-bold text-slate-950">
+          Bình luận ({comments?.length || 0})
+        </h2>
 
  {commentsEnabled ? (
  user ? (
@@ -149,12 +150,13 @@ export default async function PostPage({ params }: PostPageProps) {
  </div>
  )}
 
- <CommentList
- comments={(comments || []) as never}
- currentUserId={user?.id}
- postAuthorId={post.author_id}
- isAdmin={isAdmin}
- />
+      <CommentList
+        comments={(comments || []) as never}
+        currentUserId={user?.id}
+        postAuthorId={post.author_id}
+        isAdmin={isAdmin}
+        postId={post.id}
+      />
  </section>
  </main>
  );

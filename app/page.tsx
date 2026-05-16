@@ -67,7 +67,7 @@ export default async function HomePage({
  <main className="min-h-screen bg-slate-50 pb-20">
  {/* Hero Section */}
  <section className="max-w-7xl mx-auto px-4 py-16 sm:py-24">
- <div className="text-center mb-12">
+ <div className="text-center mb-12 animate-fade-in-up">
  <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 tracking-tight mb-6">
  Khám phá <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">bài viết mới</span>
  </h1>
@@ -76,8 +76,8 @@ export default async function HomePage({
  </p>
  </div>
 
- <form className="max-w-2xl mx-auto mb-16" action="/" method="get">
- <div className="flex flex-col sm:flex-row gap-2 rounded-full border border-slate-200 bg-white p-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 transition-all">
+ <form className="max-w-2xl mx-auto mb-16 animate-fade-in-up delay-200" action="/" method="get">
+ <div className="flex flex-col sm:flex-row gap-2 rounded-2xl sm:rounded-full border border-slate-200 bg-white p-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 transition-all">
  <div className="flex-1 flex items-center pl-4">
  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -92,7 +92,7 @@ export default async function HomePage({
  </div>
  <button
  type="submit"
- className="rounded-full bg-blue-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
+ className="rounded-xl sm:rounded-full bg-blue-600 px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg w-full sm:w-auto"
  >
  Tìm kiếm
  </button>
@@ -156,8 +156,8 @@ export default async function HomePage({
 
  {/* Lưới bài viết (Grid) */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
- {(currentPage === 1 && !query ? posts.slice(1) : posts).map((post) => (
- <Link key={post.id} href={`/posts/${post.slug}`} className="group h-full flex">
+ {(currentPage === 1 && !query ? posts.slice(1) : posts).map((post, idx) => (
+ <Link key={post.id} href={`/posts/${post.slug}`} className="group h-full flex animate-fade-in-up" style={{ animationDelay: `${idx * 100}ms` }}>
  <article className="flex w-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
  <div className="aspect-[16/10] w-full overflow-hidden bg-slate-100 relative">
  {post.image_url ? (
@@ -234,11 +234,11 @@ export default async function HomePage({
  </div>
  </>
  ) : (
- <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300 shadow-sm max-w-2xl mx-auto">
- <div className="text-6xl mb-4">📝</div>
+ <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300 shadow-sm max-w-2xl mx-auto animate-fade-in-up">
+ <div className="text-6xl mb-4 animate-float">📝</div>
  <p className="text-2xl text-slate-900 font-bold mb-3">Chưa có bài viết nào</p>
  <p className="text-slate-500 mb-6">Hãy là người đầu tiên chia sẻ kiến thức của bạn trên cộng đồng này.</p>
- <Link href="/dashboard/new" className="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700">
+ <Link href="/dashboard/new" className="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 hover:scale-105">
  Tạo bài viết mới
  </Link>
  </div>

@@ -31,7 +31,19 @@ export interface Comment {
   author_id: string;
   content: string;
   created_at: string;
+  parent_id?: string | null;
   profiles?: Profile;
+  replies?: Comment[];
+  reaction_count?: number;
+  user_reacted?: boolean;
+}
+
+export interface CommentReaction {
+  id: string;
+  comment_id: string;
+  user_id: string;
+  reaction: string;
+  created_at: string;
 }
 
 export interface Notification {
