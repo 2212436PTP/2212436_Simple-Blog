@@ -8,11 +8,17 @@ import { CommentList } from "./comment-list";
 interface RealtimeCommentsProps {
  postId: string;
  initialComments: Comment[];
+ currentUserId?: string | null;
+ postAuthorId?: string;
+ isAdmin?: boolean;
 }
 
 export function RealtimeComments({
  postId,
  initialComments,
+ currentUserId,
+ postAuthorId,
+ isAdmin,
 }: RealtimeCommentsProps) {
  const supabase = createClient();
  const [comments, setComments] = useState<Comment[]>(initialComments);
@@ -55,5 +61,13 @@ export function RealtimeComments({
  };
  }, [postId, supabase]);
 
- return <CommentList comments={comments} />;
+ return (
+    <CommentList
+      comments={comments}
+      postId={postId}
+      currentUserId={currentUserId}
+      postAuthorId={postAuthorId}
+      isAdmin={isAdmin}
+    />
+  );
 }
