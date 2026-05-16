@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createNotification } from "@/lib/notifications";
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -9,7 +10,7 @@ function getAdminClient() {
   return createAdminClient(url, key);
 }
 
-// GET /api/comments/[id]/reactions — reaction count + whether user reacted
+// GET /api/comments/[id]/reactions
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -41,7 +42,7 @@ export async function GET(
   return NextResponse.json({ count: count ?? 0, userReacted });
 }
 
-// POST /api/comments/[id]/reactions — toggle like
+// POST /api/comments/[id]/reactions — toggle like + send notification
 export async function POST(
   _req: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -77,6 +78,33 @@ export async function POST(
     user_id: user.id,
     reaction: "like",
   });
+
+  // Send notification to comment author (if not self-like)
+  const { data: comment } = await admin
+    .from("comments")
+    .select("author_id, post_id, profiles(display_name)")
+    .eq("id", commentId)
+    .maybeSingle();
+
+  if (comment && comment.author_id !== user.id) {
+    const { data: liker } = await admin
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const likerName = liker?.display_name || user.email?.split("@")[0] || "Ai đó";
+
+    await createNotification({
+      userId: comment.author_id,
+      actorId: user.id,
+      type: "reaction",
+      postId: comment.post_id,
+      commentId,
+      reaction: "like",
+      message: `❤️ ${likerName} đã thích bình luận của bạn`,
+    });
+  }
 
   return NextResponse.json({ liked: true });
 }

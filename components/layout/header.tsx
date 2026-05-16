@@ -164,9 +164,11 @@ export function Header() {
           {/* Logo */}
           <Link
             href="/"
-            className="text-xl font-bold text-blue-600 transition-colors hover:text-blue-500 shrink-0"
+            className="shrink-0 text-xl font-extrabold tracking-tight transition-opacity hover:opacity-80"
           >
-            Simple Blog
+            <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
+              GenZ.Space
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -205,7 +207,7 @@ export function Header() {
                 >
                   Thông báo
                   {unreadNotifications > 0 && (
-                    <span className="absolute -right-3 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
+                    <span className="absolute -right-3 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white animate-bounce">
                       {unreadNotifications}
                     </span>
                   )}
@@ -251,7 +253,7 @@ export function Header() {
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
-                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-0.5 text-[9px] font-bold text-white">
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-0.5 text-[9px] font-bold text-white animate-bounce">
                   {unreadNotifications}
                 </span>
               </button>
@@ -280,7 +282,7 @@ export function Header() {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white shadow-lg">
+        <div className="md:hidden border-t border-gray-100 bg-white shadow-lg animate-slide-down">
           <div className="mx-auto max-w-7xl px-4 py-3 space-y-1">
             {user && (
               <div className="flex items-center gap-3 px-4 py-3 mb-2 bg-blue-50 rounded-xl">

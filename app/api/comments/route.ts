@@ -75,26 +75,49 @@ export async function POST(request: Request) {
  .select("*")
  .single();
 
- if (error) {
- return NextResponse.json({ error: error.message }, { status: 400 });
- }
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
 
- if (post.author_id !== user.id) {
- const { data: profile } = await admin
- .from("profiles")
- .select("display_name")
- .eq("id", user.id)
- .maybeSingle();
+  const { data: profile } = await admin
+    .from("profiles")
+    .select("display_name")
+    .eq("id", user.id)
+    .maybeSingle();
 
- await createNotification({
- userId: post.author_id,
- actorId: user.id,
- type: "comment",
- postId: post.id,
- commentId: comment.id,
- message: `${profile?.display_name || user.email?.split("@")[0] || "Ai đó"} đã bình luận bài viết của bạn: ${post.title}`,
- });
- }
+  const actorName = profile?.display_name || user.email?.split("@")[0] || "Ai đó";
 
- return NextResponse.json({ ok: true, comment }, { status: 200 });
+  // Notify post author when someone comments (but not a reply)
+  if (!body.parentId && post.author_id !== user.id) {
+    await createNotification({
+      userId: post.author_id,
+      actorId: user.id,
+      type: "comment",
+      postId: post.id,
+      commentId: comment.id,
+      message: `💬 ${actorName} đã bình luận bài viết của bạn: "${post.title}"`,
+    });
+  }
+
+  // Notify parent comment author when someone replies to their comment
+  if (body.parentId) {
+    const { data: parentComment } = await admin
+      .from("comments")
+      .select("author_id")
+      .eq("id", body.parentId)
+      .maybeSingle();
+
+    if (parentComment && parentComment.author_id !== user.id) {
+      await createNotification({
+        userId: parentComment.author_id,
+        actorId: user.id,
+        type: "comment",
+        postId: post.id,
+        commentId: comment.id,
+        message: `↩️ ${actorName} đã trả lời bình luận của bạn trong bài: "${post.title}"`,
+      });
+    }
+  }
+
+  return NextResponse.json({ ok: true, comment }, { status: 200 });
 }

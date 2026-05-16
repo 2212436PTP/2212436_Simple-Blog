@@ -6,8 +6,8 @@ import { HeaderWrapper } from "@/components/layout/header-wrapper";
 const inter = Inter({ subsets: ["latin", "vietnamese"] });
 
 export const metadata: Metadata = {
- title: "Simple Blog",
- description: "A simple blog built with Next.js and Supabase",
+  title: "GenZ.Space",
+  description: "Góc chia sẻ kiến thức, kinh nghiệm và câu chuyện của thế hệ GenZ",
 };
 
 export default function RootLayout({
