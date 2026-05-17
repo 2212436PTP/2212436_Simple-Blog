@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { HeaderWrapper } from "@/components/layout/header-wrapper";
 
-const inter = Inter({ subsets: ["latin", "vietnamese"] });
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 export const metadata: Metadata = {
   title: "GenZ.Space",
@@ -11,18 +15,18 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
- children,
+  children,
 }: Readonly<{
- children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
- return (
- <html lang="vi" suppressHydrationWarning>
- <body className={`${inter.className} bg-slate-50 text-slate-900`}>
- <div className="flex flex-col min-h-screen">
- <HeaderWrapper />
- <main className="flex-1">{children}</main>
- </div>
- </body>
- </html>
- );
+  return (
+    <html lang="vi" suppressHydrationWarning>
+      <body className={`${jakarta.variable} font-sans bg-slate-50 text-slate-900`}>
+        <div className="flex flex-col min-h-screen">
+          <HeaderWrapper />
+          <main className="flex-1">{children}</main>
+        </div>
+      </body>
+    </html>
+  );
 }

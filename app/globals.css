@@ -2,16 +2,17 @@
 
 :root {
   color-scheme: light;
+
+  /* GenZ.Space brand tokens */
+  --genz-primary:   #7c3aed; /* violet-700 */
+  --genz-secondary: #db2777; /* pink-600   */
+  --genz-accent:    #06b6d4; /* cyan-500   */
+  --genz-gradient:  linear-gradient(135deg, #7c3aed 0%, #a855f7 40%, #db2777 100%);
+  --genz-glow:      0 0 32px rgba(124, 58, 237, 0.25);
 }
 
-
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: var(--font-jakarta, 'Plus Jakarta Sans'), 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition:
@@ -19,10 +20,17 @@ body {
     color 0.3s ease;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* GenZ purple scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #7c3aed, #db2777);
+  border-radius: 99px;
 }
+::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+
+/* font-sans utility picks up the CSS variable */
+.font-sans { font-family: var(--font-jakarta, 'Plus Jakarta Sans'), system-ui, sans-serif; }
 
 ::-webkit-scrollbar-track {
   background: var(--background);
