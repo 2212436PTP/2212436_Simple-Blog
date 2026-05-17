@@ -15,6 +15,24 @@
   --radius-card:   20px;
   --shadow-card:   0 2px 24px rgba(0,0,0,0.06);
   --shadow-hover:  0 12px 48px rgba(124, 58, 237, 0.15);
+
+  /* Light theme */
+  --bg:            #f8f7ff;
+  --bg-card:       #ffffff;
+  --text:          #1e1b4b;
+  --text-muted:    #6b7280;
+  --border:        rgba(124, 58, 237, 0.12);
+}
+
+html.dark {
+  color-scheme: dark;
+
+  --bg:         #0d0b1a;
+  --bg-card:    rgba(30, 27, 74, 0.6);
+  --text:       #ede9fe;
+  --text-muted: #9ca3af;
+  --border:     rgba(168, 85, 247, 0.2);
+  --shadow-card: 0 2px 24px rgba(0,0,0,0.4);
 }
 
 /* ═══════════════════════════════════════════
@@ -26,8 +44,9 @@ body {
   font-family: var(--font-jakarta, 'Plus Jakarta Sans'), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f8f7ff;
-  color: #1e1b4b;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .font-sans {
@@ -35,7 +54,46 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   Scrollbar (Animista-inspired gradient)
+   Dark mode component overrides
+═══════════════════════════════════════════ */
+html.dark header {
+  background: rgba(13, 11, 26, 0.85) !important;
+  border-color: rgba(168, 85, 247, 0.15) !important;
+}
+
+html.dark .card-gradient-border {
+  background: rgba(30, 27, 74, 0.7);
+}
+
+html.dark article {
+  background: rgba(20, 17, 50, 0.85) !important;
+  border-color: rgba(168, 85, 247, 0.2) !important;
+  color: var(--text);
+}
+
+html.dark section {
+  background: rgba(20, 17, 50, 0.85) !important;
+  border-color: rgba(168, 85, 247, 0.2) !important;
+}
+
+html.dark .glass {
+  background: rgba(20, 17, 50, 0.75) !important;
+  border-color: rgba(168, 85, 247, 0.2) !important;
+}
+
+html.dark .prose {
+  color: #ede9fe;
+}
+
+html.dark .prose h1, html.dark .prose h2, html.dark .prose h3 {
+  color: #f5f3ff;
+}
+
+/* Dark scrollbar */
+html.dark ::-webkit-scrollbar-track { background: #1e1b4b; }
+
+/* ═══════════════════════════════════════════
+   Scrollbar
 ═══════════════════════════════════════════ */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: #f1f0ff; }
@@ -50,6 +108,11 @@ body {
 ::selection {
   background: rgba(124, 58, 237, 0.2);
   color: #4c1d95;
+}
+
+html.dark ::selection {
+  background: rgba(168, 85, 247, 0.3);
+  color: #ede9fe;
 }
 
 /* ═══════════════════════════════════════════

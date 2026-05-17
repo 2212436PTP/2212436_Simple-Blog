@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { logout } from "@/app/actions/auth";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 type SessionUser = {
   id: string;
@@ -183,9 +184,8 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-4 lg:gap-6">
-            <Link href="/" className={navLinkClass}>
-              Trang chủ
-            </Link>
+            <Link href="/" className={navLinkClass}>Trang chủ</Link>
+            <ThemeToggle />
             {user ? (
               <>
                 <div className="hidden items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm lg:flex">
