@@ -17,10 +17,14 @@ export function ViewCounter({ postId }: ViewCounterProps) {
     if (called.current) return;
     called.current = true;
 
-    // Use rpc to increment safely — falls back gracefully if column missing
-    void supabase.rpc("increment_post_views", { post_id: postId }).catch(() => {
-      // Silently ignore if function doesn't exist yet
-    });
+    // Use rpc to increment safely — falls back gracefully if function missing
+    void (async () => {
+      try {
+        await supabase.rpc("increment_post_views", { post_id: postId });
+      } catch {
+        // Silently ignore if function doesn't exist yet
+      }
+    })();
   }, [postId, supabase]);
 
   return null;
