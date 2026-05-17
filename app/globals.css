@@ -221,5 +221,20 @@ body {
 }
 .card-gradient-border:hover::before { opacity: 1; }
 
-/* Smooth global transitions */
-a, button { transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
+/* Smooth global transitions — specific props only, not 'all' */
+a { transition: color 0.2s ease, opacity 0.2s ease; }
+button { transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease; }
+
+/* ═══════════════════════════════════════════
+   GSAP safety: elements are visible by default.
+   GSAP will override opacity via inline style,
+   but if JS fails they remain visible.
+═══════════════════════════════════════════ */
+.gsap-hero-badge,
+.gsap-hero-title,
+.gsap-hero-sub,
+.gsap-hero-search,
+.gsap-featured,
+.gsap-card {
+  opacity: 1;  /* visible by default — GSAP overrides with fromTo */
+}
