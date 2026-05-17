@@ -153,12 +153,22 @@ export function Header() {
   }
 
   const navLinkClass =
-    "font-medium text-gray-700 transition-colors hover:text-blue-600";
+    "relative font-semibold text-slate-600 hover:text-violet-600 transition-colors after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 after:rounded-full" +
+    " " + "after:bg-gradient-to-r after:from-violet-600 after:to-pink-500";
   const mobileNavLinkClass =
-    "block w-full px-4 py-3 text-left font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-colors";
+    "block w-full px-4 py-3 text-left font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 rounded-xl transition-colors";
 
   return (
-    <header className="relative border-b border-gray-200 bg-white shadow-md">
+    <header
+      className="sticky top-0 z-50"
+      style={{
+        background: "rgba(255,255,255,0.85)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderBottom: "1px solid rgba(124,58,237,0.1)",
+        boxShadow: "0 1px 32px rgba(124,58,237,0.07)",
+      }}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
