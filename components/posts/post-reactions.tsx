@@ -81,7 +81,7 @@ export function PostReactions({ postId }: { postId: string }) {
   const totalReactions = Object.values(state.counts).reduce((s, v) => s + v, 0);
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <h3 className="text-sm font-semibold text-slate-900">Cảm xúc bài viết</h3>
@@ -90,7 +90,7 @@ export function PostReactions({ postId }: { postId: string }) {
           </p>
         </div>
         {state.selected && (
-          <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm ring-1 ring-slate-200">
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 shadow-sm ring-1 ring-slate-200">
             Đã chọn: {REACTIONS.find((x) => x.key === state.selected)?.label}
           </span>
         )}
@@ -119,7 +119,7 @@ export function PostReactions({ postId }: { postId: string }) {
               className={`flex flex-col items-center justify-center gap-1 rounded-2xl border px-3 py-3 text-sm font-medium transition-all hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 ${
                 active
                   ? `border-transparent bg-gradient-to-r ${reaction.accent} text-white shadow-lg`
-                  : "border-slate-200 bg-white text-slate-700 hover:border-violet-300 hover:bg-violet-50"
+                  : "border-slate-200 bg-slate-50 text-slate-700 hover:border-violet-300 hover:bg-violet-50"
               }`}
               aria-pressed={active}
             >

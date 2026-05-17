@@ -570,7 +570,7 @@ export function PostForm({ post, authorId }: PostFormProps) {
  </select>
  </div>
 
- <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-4 /70 sm:grid-cols-2">
+ <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2">
  <label className="flex items-start gap-3 text-sm text-slate-700 ">
  <input
  type="checkbox"
@@ -602,7 +602,7 @@ export function PostForm({ post, authorId }: PostFormProps) {
  </label>
  </div>
 
- <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-5 /70">
+ <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
  <div className="mb-3 flex items-center justify-between gap-3">
  <div>
  <h3 className="text-sm font-semibold text-slate-900 ">
@@ -617,7 +617,7 @@ export function PostForm({ post, authorId }: PostFormProps) {
  </span>
  </div>
 
- <div className="space-y-4 rounded-2xl border border-dashed border-slate-300 bg-white p-4 ">
+ <div className="space-y-4 rounded-2xl border border-dashed border-slate-300 bg-slate-100 p-4 ">
  {renderMarkdownPreview(content)}
  </div>
  </div>
@@ -633,7 +633,8 @@ export function PostForm({ post, authorId }: PostFormProps) {
  <button
  type="submit"
  disabled={loading}
- className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-6 py-2.5 rounded-xl font-semibold text-white shadow-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+ style={{ background: "linear-gradient(135deg, #7c3aed, #ec4899)" }}
  >
  {loading ? "Đang lưu..." : isEditing ? "Cập nhật" : "Tạo bài viết"}
  </button>
@@ -641,4 +642,3 @@ export function PostForm({ post, authorId }: PostFormProps) {
  </form>
  );
 }
-

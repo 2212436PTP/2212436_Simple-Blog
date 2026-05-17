@@ -160,11 +160,19 @@ html.dark .featured-no-image-bg {
 ═══════════════════════════════════════════ */
 html.dark .bg-white,
 html.dark .bg-white\/80,
-html.dark .bg-white\/90 {
-  background: rgba(22, 19, 55, 0.92) !important;
+html.dark .bg-white\/90,
+/* Attribute selectors catch Tailwind /opacity variants (e.g. bg-white/80) */
+html.dark [class~="bg-white/80"],
+html.dark [class~="bg-white/90"] {
+  background: rgba(26, 22, 65, 0.93) !important;
 }
 html.dark .bg-slate-50,
-html.dark .bg-gray-50 { background-color: #13102a !important; }
+html.dark .bg-gray-50,
+/* Catch bg-slate-50/80 and similar opacity variants */
+html.dark [class~="bg-slate-50/80"],
+html.dark [class~="bg-slate-50/90"],
+html.dark [class~="bg-gray-50/80"],
+html.dark [class*="bg-slate-50"] { background-color: rgba(22, 19, 60, 0.85) !important; }
 html.dark .bg-slate-100,
 html.dark .bg-gray-100 { background-color: #1e1b4b !important; }
 html.dark .bg-slate-200,
