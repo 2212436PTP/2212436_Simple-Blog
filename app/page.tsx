@@ -78,10 +78,8 @@ export default async function HomePage({
 
         {/* ══════════ HERO ══════════ */}
         <section className="relative overflow-hidden">
-          <div
-            className="absolute inset-0 -z-10"
-            style={{ background: "linear-gradient(160deg, #ede9fe 0%, #fdf4ff 45%, #fce7f3 100%)" }}
-          />
+          {/* CSS class handles light/dark gradient — see hero-bg in globals.css */}
+          <div className="hero-bg absolute inset-0 -z-10" />
           {/* Floating orbs */}
           <div className="pointer-events-none absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full animate-float"
             style={{ background: "radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%)", filter: "blur(60px)" }} />
@@ -90,15 +88,7 @@ export default async function HomePage({
 
           <div className="mx-auto max-w-4xl px-4 py-24 sm:py-32 text-center">
             {/* Live badge */}
-            <div
-              className="gsap-hero-badge inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold mb-6"
-              style={{
-                background: "rgba(255,255,255,0.8)",
-                backdropFilter: "blur(12px)",
-                border: "1px solid rgba(124,58,237,0.2)",
-                color: "#7c3aed",
-              }}
-            >
+            <div className="gsap-hero-badge hero-badge inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold mb-6">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75 animate-ping" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-violet-600" />
@@ -107,7 +97,7 @@ export default async function HomePage({
             </div>
 
             <h1 className="gsap-hero-title text-5xl sm:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1]">
-              <span className="text-slate-900">Khám phá </span>
+              <span className="hero-title-dark">Khám phá </span>
               <span className="text-gradient">bài viết mới</span>
             </h1>
 
@@ -117,15 +107,7 @@ export default async function HomePage({
 
             {/* Search */}
             <form className="gsap-hero-search mx-auto max-w-2xl" action="/" method="get">
-              <div
-                className="flex flex-col sm:flex-row gap-2 p-2 rounded-2xl sm:rounded-full"
-                style={{
-                  background: "rgba(255,255,255,0.9)",
-                  backdropFilter: "blur(16px)",
-                  border: "1px solid rgba(124,58,237,0.15)",
-                  boxShadow: "0 8px 32px rgba(124,58,237,0.1)",
-                }}
-              >
+              <div className="hero-search-box flex flex-col sm:flex-row gap-2 p-2 rounded-2xl sm:rounded-full">
                 <div className="flex flex-1 items-center pl-3">
                   <svg className="w-5 h-5 shrink-0 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -133,7 +115,7 @@ export default async function HomePage({
                   <input
                     type="search" name="q" defaultValue={query}
                     placeholder="Tìm kiếm bài viết..."
-                    className="w-full bg-transparent px-3 py-2.5 text-slate-800 outline-none placeholder:text-slate-400"
+                    className="hero-search-input w-full px-3 py-2.5 outline-none placeholder:text-slate-400"
                   />
                 </div>
                 <button
@@ -182,8 +164,8 @@ export default async function HomePage({
                           />
                         ) : (
                           <div
-                            className="flex h-full w-full items-center justify-center text-7xl"
-                            style={{ background: "linear-gradient(135deg, #ede9fe, #fce7f3)", minHeight: "260px" }}
+                            className="featured-no-image-bg flex h-full w-full items-center justify-center text-7xl"
+                            style={{ minHeight: "260px" }}
                           >
                             ✍️
                           </div>
