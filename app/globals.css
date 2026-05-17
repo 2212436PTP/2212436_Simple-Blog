@@ -402,3 +402,13 @@ button { transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2
   60%  { transform: translateY(-40px) scale(1.2); opacity: 0.9; }
   100% { transform: translateY(-72px) scale(0.6); opacity: 0; }
 }
+
+/* ═══════════════════════════════════════════
+   flyUp — fullscreen emoji animation
+   Used by spawnFloatingEmojis utility
+═══════════════════════════════════════════ */
+@keyframes flyUp {
+  0%   { transform: translateY(0)     scale(1)   rotate(0deg);        opacity: 0.95; }
+  40%  { transform: translateY(-20vh) scale(1.1) rotate(var(--rot, 10deg)); opacity: 0.8;  }
+  100% { transform: translateY(-65vh) scale(0.4) rotate(calc(var(--rot, 10deg) * 2)); opacity: 0; }
+}

@@ -74,7 +74,7 @@ export default async function HomePage({
     <>
       <GSAPAnimations />
 
-      <main className="min-h-screen" style={{ background: "#f8f7ff" }}>
+      <main className="min-h-screen" style={{ background: "var(--bg)" }}>
 
         {/* ══════════ HERO ══════════ */}
         <section className="relative overflow-hidden">

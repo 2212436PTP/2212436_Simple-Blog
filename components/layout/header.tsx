@@ -210,6 +210,9 @@ export function Header() {
                 <Link href="/dashboard/settings" className={navLinkClass}>
                   Hồ sơ
                 </Link>
+                <Link href="/dashboard/saved" className={navLinkClass}>
+                  🔖 Đã lưu
+                </Link>
                 <button
                   type="button"
                   onClick={() => setNotificationOpen((value) => !value)}
