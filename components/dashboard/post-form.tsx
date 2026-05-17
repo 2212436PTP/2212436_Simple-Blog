@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { Post, PostStatus } from "@/types/database";
 import mammoth from "mammoth/mammoth.browser";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import { useConfetti } from "@/components/ui/use-confetti";
 
 interface PostFormProps {
  post?: Post;
@@ -640,3 +641,4 @@ export function PostForm({ post, authorId }: PostFormProps) {
  </form>
  );
 }
+

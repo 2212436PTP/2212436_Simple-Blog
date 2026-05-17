@@ -6,6 +6,9 @@ import { CommentList } from "@/components/posts/comment-list";
 import { PostReactions } from "@/components/posts/post-reactions";
 import { ReadingProgress } from "@/components/ui/reading-progress";
 import { ShareButton } from "@/components/ui/share-button";
+import { SaveButton } from "@/components/ui/save-button";
+import { ViewCounter } from "@/components/ui/view-counter";
+import { PostStats } from "@/components/home/post-stats";
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
@@ -30,12 +33,7 @@ export async function generateMetadata({
   };
 }
 
-/** Estimate reading time in minutes (200 words/min) */
-function getReadingTime(content: string | null): number {
-  if (!content) return 1;
-  const words = content.trim().split(/\s+/).length;
-  return Math.max(1, Math.ceil(words / 200));
-}
+
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
@@ -66,12 +64,12 @@ export default async function PostPage({ params }: PostPageProps) {
     ? "Ẩn danh"
     : post.profiles?.display_name || "Ẩn danh";
 
-  const readingTime = getReadingTime(post.content);
-
   return (
     <>
-      {/* Reading progress bar (fixed, top of viewport) */}
+      {/* Reading progress bar */}
       <ReadingProgress />
+      {/* Silently increment view count */}
+      <ViewCounter postId={post.id} />
 
       <main className="mx-auto max-w-4xl px-4 py-10">
         <article className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl backdrop-blur animate-fade-in-up">
@@ -98,13 +96,12 @@ export default async function PostPage({ params }: PostPageProps) {
                     : ""}
                 </time>
                 <span>•</span>
-                <span className="flex items-center gap-1 rounded-full bg-pink-50 px-3 py-1 text-pink-700 font-medium">
-                  ⏱️ {readingTime} phút đọc
-                </span>
+                <PostStats postId={post.id} showViews />
               </div>
-
-              {/* Share button */}
-              <ShareButton url={`/posts/${post.slug}`} title={post.title} />
+              <div className="flex items-center gap-2">
+                <SaveButton postId={post.id} postSlug={post.slug} />
+                <ShareButton url={`/posts/${post.slug}`} title={post.title} />
+              </div>
             </div>
           </div>
 

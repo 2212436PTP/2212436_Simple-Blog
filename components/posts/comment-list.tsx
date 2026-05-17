@@ -98,11 +98,14 @@ function ReplyForm({
   );
 }
 
-// ─── Like button ──────────────────────────────────────────────────────────────
+// ─── Like button + Flying Hearts ─────────────────────────────────────────────
+interface FlyingHeart { id: number; x: number; }
+
 function LikeButton({ commentId, currentUserId }: { commentId: string; currentUserId?: string | null }) {
   const [count, setCount] = useState(0);
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [hearts, setHearts] = useState<FlyingHeart[]>([]);
 
   const load = useCallback(async () => {
     const res = await fetch(`/api/comments/${commentId}/reactions`);
@@ -114,13 +117,24 @@ function LikeButton({ commentId, currentUserId }: { commentId: string; currentUs
 
   useEffect(() => { void load(); }, [load]);
 
+  const spawnHearts = () => {
+    const batch: FlyingHeart[] = Array.from({ length: 5 }, (_, i) => ({
+      id: Date.now() + i,
+      x: Math.random() * 40 - 20, // -20 to +20px offset
+    }));
+    setHearts((h) => [...h, ...batch]);
+    setTimeout(() => {
+      setHearts((h) => h.filter((fh) => !batch.find((b) => b.id === fh.id)));
+    }, 900);
+  };
+
   const toggle = async () => {
     if (!currentUserId) return;
     setLoading(true);
-    // Optimistic update
     const wasLiked = liked;
     setLiked(!wasLiked);
     setCount((c) => (wasLiked ? c - 1 : c + 1));
+    if (!wasLiked) spawnHearts();
     try {
       await fetch(`/api/comments/${commentId}/reactions`, { method: "POST" });
     } finally {
@@ -129,22 +143,40 @@ function LikeButton({ commentId, currentUserId }: { commentId: string; currentUs
   };
 
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      disabled={loading || !currentUserId}
-      title={currentUserId ? (liked ? "Bỏ thích" : "Thích") : "Đăng nhập để thích"}
-      className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
-        liked
-          ? "bg-rose-50 text-rose-600 ring-1 ring-rose-200 hover:bg-rose-100"
-          : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-      } disabled:cursor-not-allowed`}
-    >
-      <span className={`text-sm ${liked ? "animate-pop-in" : ""}`}>{liked ? "❤️" : "🤍"}</span>
-      {count > 0 && <span>{count}</span>}
-    </button>
+    <div className="relative inline-flex">
+      {/* Flying hearts */}
+      {hearts.map((h) => (
+        <span
+          key={h.id}
+          className="pointer-events-none absolute text-rose-500 select-none"
+          style={{
+            left: `calc(50% + ${h.x}px)`,
+            bottom: "100%",
+            fontSize: "14px",
+            animation: "flyHeart 0.85s ease-out forwards",
+          }}
+        >
+          ❤️
+        </span>
+      ))}
+      <button
+        type="button"
+        onClick={toggle}
+        disabled={loading || !currentUserId}
+        title={currentUserId ? (liked ? "Bỏ thích" : "Thích") : "Đăng nhập để thích"}
+        className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
+          liked
+            ? "bg-rose-50 text-rose-600 ring-1 ring-rose-200 hover:bg-rose-100"
+            : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+        } disabled:cursor-not-allowed`}
+      >
+        <span className={`text-sm ${liked ? "animate-pop-in" : ""}`}>{liked ? "❤️" : "🤍"}</span>
+        {count > 0 && <span>{count}</span>}
+      </button>
+    </div>
   );
 }
+
 
 // ─── Single comment card ──────────────────────────────────────────────────────
 function CommentCard({
