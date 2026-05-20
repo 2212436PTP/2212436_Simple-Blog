@@ -155,8 +155,7 @@ export function Header() {
 
   const navLinkClass =
     "relative font-semibold text-slate-600 hover:text-violet-600 transition-colors after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 after:rounded-full" +
-    " " +
-    "after:bg-gradient-to-r after:from-violet-600 after:to-pink-500";
+    " " + "after:bg-gradient-to-r after:from-violet-600 after:to-pink-500";
   const mobileNavLinkClass =
     "block w-full px-4 py-3 text-left font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 rounded-xl transition-colors";
 
@@ -178,16 +177,14 @@ export function Header() {
             href="/"
             className="shrink-0 text-xl font-extrabold tracking-tight transition-opacity hover:opacity-80"
           >
-            <span className="bg-linear-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
               GenZ.Space
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-4 lg:gap-6">
-            <Link href="/" className={navLinkClass}>
-              Trang chủ
-            </Link>
+            <Link href="/" className={navLinkClass}>Trang chủ</Link>
             <ThemeToggle />
             {user ? (
               <>
@@ -266,18 +263,8 @@ export function Header() {
                 onClick={() => setNotificationOpen((v) => !v)}
                 className="relative p-1 text-gray-600"
               >
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
                 <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-0.5 text-[9px] font-bold text-white animate-bounce">
                   {unreadNotifications}
@@ -293,32 +280,12 @@ export function Header() {
               aria-label="Toggle mobile menu"
             >
               {mobileMenuOpen ? (
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
             </button>
@@ -334,57 +301,31 @@ export function Header() {
               <div className="flex items-center gap-3 px-4 py-3 mb-2 bg-blue-50 rounded-xl">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blue-600 text-sm font-bold text-white">
                   {avatarUrl ? (
-                    <img
-                      src={avatarUrl}
-                      alt={displayName}
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
                   ) : (
                     displayName[0]?.toUpperCase() || "U"
                   )}
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900 text-sm">
-                    {displayName}
-                  </p>
+                  <p className="font-semibold text-slate-900 text-sm">{displayName}</p>
                   <p className="text-xs text-slate-500">Đang đăng nhập</p>
                 </div>
               </div>
             )}
 
-            <Link
-              href="/"
-              className={mobileNavLinkClass}
-              onClick={() => setMobileMenuOpen(false)}
-            >
+            <Link href="/" className={mobileNavLinkClass} onClick={() => setMobileMenuOpen(false)}>
               🏠 Trang chủ
             </Link>
 
-            <div className="px-4 py-2">
-              <ThemeToggle />
-            </div>
-
             {user ? (
               <>
-                <Link
-                  href="/dashboard"
-                  className={mobileNavLinkClass}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                <Link href="/dashboard" className={mobileNavLinkClass} onClick={() => setMobileMenuOpen(false)}>
                   📊 Bảng điều khiển
                 </Link>
-                <Link
-                  href="/dashboard/settings"
-                  className={mobileNavLinkClass}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                <Link href="/dashboard/settings" className={mobileNavLinkClass} onClick={() => setMobileMenuOpen(false)}>
                   👤 Hồ sơ
                 </Link>
-                <Link
-                  href="/notifications"
-                  className={mobileNavLinkClass}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                <Link href="/notifications" className={mobileNavLinkClass} onClick={() => setMobileMenuOpen(false)}>
                   🔔 Thông báo
                   {unreadNotifications > 0 && (
                     <span className="ml-2 inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-bold text-white">
@@ -393,11 +334,7 @@ export function Header() {
                   )}
                 </Link>
                 {user.user_metadata?.role === "admin" && (
-                  <Link
-                    href="/admin"
-                    className={mobileNavLinkClass}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+                  <Link href="/admin" className={mobileNavLinkClass} onClick={() => setMobileMenuOpen(false)}>
                     ⚙️ Admin
                   </Link>
                 )}
