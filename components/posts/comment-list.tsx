@@ -5,7 +5,6 @@ import { useState, useEffect, useCallback } from "react";
 import type { Comment } from "@/types/database";
 import { spawnFloatingEmojis } from "@/lib/spawn-emojis";
 
-
 interface CommentListProps {
   comments: Comment[];
   currentUserId?: string | null;
@@ -52,7 +51,9 @@ function ReplyForm({
         body: JSON.stringify({ postId, content: text.trim(), parentId }),
       });
       if (!res.ok) {
-        const p = (await res.json().catch(() => null)) as { error?: string } | null;
+        const p = (await res.json().catch(() => null)) as {
+          error?: string;
+        } | null;
         throw new Error(p?.error || "Không thể gửi trả lời");
       }
       setText("");
@@ -68,9 +69,11 @@ function ReplyForm({
   return (
     <div className="mt-3 animate-slide-down">
       {err && (
-        <p className="mb-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">{err}</p>
+        <p className="mb-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">
+          {err}
+        </p>
       )}
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row">
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -78,19 +81,19 @@ function ReplyForm({
           placeholder="Viết trả lời..."
           className="flex-1 resize-none rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
         />
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-row gap-2 sm:flex-col sm:gap-1">
           <button
             type="button"
             onClick={submit}
             disabled={loading || !text.trim()}
-            className="rounded-xl bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+            className="w-full sm:w-auto rounded-xl bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {loading ? "..." : "Gửi"}
           </button>
           <button
             type="button"
             onClick={onDone}
-            className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-50"
+            className="w-full sm:w-auto rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-50"
           >
             Huỷ
           </button>
@@ -101,7 +104,13 @@ function ReplyForm({
 }
 
 // ─── Like button + Flying Hearts ─────────────────────────────────────────────
-function LikeButton({ commentId, currentUserId }: { commentId: string; currentUserId?: string | null }) {
+function LikeButton({
+  commentId,
+  currentUserId,
+}: {
+  commentId: string;
+  currentUserId?: string | null;
+}) {
   const [count, setCount] = useState(0);
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -114,7 +123,9 @@ function LikeButton({ commentId, currentUserId }: { commentId: string; currentUs
     setLiked(data.userReacted);
   }, [commentId]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   const toggle = async () => {
     if (!currentUserId) return;
@@ -136,19 +147,22 @@ function LikeButton({ commentId, currentUserId }: { commentId: string; currentUs
       type="button"
       onClick={toggle}
       disabled={loading || !currentUserId}
-      title={currentUserId ? (liked ? "Bỏ thích" : "Thích") : "Đăng nhập để thích"}
+      title={
+        currentUserId ? (liked ? "Bỏ thích" : "Thích") : "Đăng nhập để thích"
+      }
       className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-all hover:scale-105 active:scale-95 ${
         liked
           ? "bg-rose-50 text-rose-600 ring-1 ring-rose-200 hover:bg-rose-100"
           : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
       } disabled:cursor-not-allowed`}
     >
-      <span className={`text-sm ${liked ? "animate-pop-in" : ""}`}>{liked ? "❤️" : "🤍"}</span>
+      <span className={`text-sm ${liked ? "animate-pop-in" : ""}`}>
+        {liked ? "❤️" : "🤍"}
+      </span>
       {count > 0 && <span>{count}</span>}
     </button>
   );
 }
-
 
 // ─── Single comment card ──────────────────────────────────────────────────────
 function CommentCard({
@@ -170,23 +184,36 @@ function CommentCard({
 }) {
   const [showReply, setShowReply] = useState(false);
   const parsed = parseCommentContent(comment.content);
-  const name = parsed.anonymous ? "Ẩn danh" : comment.profiles?.display_name || "Ẩn danh";
+  const name = parsed.anonymous
+    ? "Ẩn danh"
+    : comment.profiles?.display_name || "Ẩn danh";
   const avatar = parsed.anonymous ? null : comment.profiles?.avatar_url;
-  const canDelete = isAdmin || comment.author_id === currentUserId || postAuthorId === currentUserId;
+  const canDelete =
+    isAdmin ||
+    comment.author_id === currentUserId ||
+    postAuthorId === currentUserId;
 
   return (
-    <div className={`animate-fade-in-up ${depth > 0 ? "ml-4 sm:ml-8 border-l-2 border-blue-100 pl-3 sm:pl-4" : ""}`}>
+    <div
+      className={`animate-fade-in-up ${depth > 0 ? "ml-4 sm:ml-8 border-l-2 border-blue-100 pl-3 sm:pl-4" : ""}`}
+    >
       <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur">
         {/* Header */}
-        <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <span
               className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full text-xs font-semibold ${
-                parsed.anonymous ? "bg-slate-200 text-slate-700" : "bg-blue-100 text-blue-700"
+                parsed.anonymous
+                  ? "bg-slate-200 text-slate-700"
+                  : "bg-blue-100 text-blue-700"
               }`}
             >
               {avatar ? (
-                <img src={avatar} alt={name} className="h-full w-full object-cover" />
+                <img
+                  src={avatar}
+                  alt={name}
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 name[0]?.toUpperCase() || "U"
               )}
@@ -194,7 +221,9 @@ function CommentCard({
             <div>
               <span
                 className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                  parsed.anonymous ? "bg-slate-200 text-slate-700" : "bg-blue-50 text-blue-700"
+                  parsed.anonymous
+                    ? "bg-slate-200 text-slate-700"
+                    : "bg-blue-50 text-blue-700"
                 }`}
               >
                 {name}
@@ -218,7 +247,7 @@ function CommentCard({
                   onDelete(comment.id);
                 }
               }}
-              className="text-xs font-medium text-red-500 hover:text-red-700"
+              className="self-start text-xs font-medium text-red-500 hover:text-red-700 sm:self-auto"
             >
               Xóa
             </button>
@@ -226,10 +255,12 @@ function CommentCard({
         </div>
 
         {/* Content */}
-        <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700">{parsed.content}</p>
+        <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700">
+          {parsed.content}
+        </p>
 
         {/* Actions */}
-        <div className="mt-3 flex items-center gap-3 border-t border-slate-100 pt-3">
+        <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-3">
           <LikeButton commentId={comment.id} currentUserId={currentUserId} />
           {currentUserId && depth < 2 && (
             <button
@@ -286,7 +317,9 @@ export function CommentList({
   const handleDelete = async (commentId: string) => {
     const res = await fetch(`/api/comments/${commentId}`, { method: "DELETE" });
     if (!res.ok) {
-      const p = (await res.json().catch(() => null)) as { error?: string } | null;
+      const p = (await res.json().catch(() => null)) as {
+        error?: string;
+      } | null;
       alert(p?.error || "Không thể xóa bình luận");
       return;
     }

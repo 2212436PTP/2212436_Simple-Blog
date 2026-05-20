@@ -33,8 +33,6 @@ export async function generateMetadata({
   };
 }
 
-
-
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
   const supabase = await createClient();
@@ -71,16 +69,15 @@ export default async function PostPage({ params }: PostPageProps) {
       {/* Silently increment view count */}
       <ViewCounter postId={post.id} />
 
-      <main className="mx-auto max-w-4xl px-4 py-10">
+      <main className="mx-auto max-w-4xl px-4 py-8 sm:py-10">
         <article className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl backdrop-blur animate-fade-in-up">
-          <div className="px-6 pt-8 sm:px-10 sm:pt-10">
-
+          <div className="px-4 pt-8 sm:px-10 sm:pt-10">
             <h1 className="mb-5 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-5xl leading-tight">
               {post.title}
             </h1>
 
             {/* Meta row */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 mb-2">
               <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
                 <span className="rounded-full bg-violet-50 px-3 py-1 text-violet-700 font-medium">
                   ✍️ {postAuthorName}
@@ -98,7 +95,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 <span>•</span>
                 <PostStats postId={post.id} showViews />
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <SaveButton postId={post.id} postSlug={post.slug} />
                 <ShareButton url={`/posts/${post.slug}`} title={post.title} />
               </div>
@@ -107,19 +104,23 @@ export default async function PostPage({ params }: PostPageProps) {
 
           {/* Cover image */}
           {post.image_url && (
-            <div className="w-full px-6 sm:px-10 mt-6">
+            <div className="w-full px-4 sm:px-10 mt-6">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={post.image_url}
                 alt={post.title}
                 className="w-full h-auto rounded-2xl shadow-md"
-                style={{ maxHeight: "600px", objectFit: "contain", background: "#f8fafc" }}
+                style={{
+                  maxHeight: "600px",
+                  objectFit: "contain",
+                  background: "#f8fafc",
+                }}
               />
             </div>
           )}
 
           {/* Content */}
-          <div className="px-6 py-8 sm:px-10">
+          <div className="px-4 py-8 sm:px-10">
             <div className="prose prose-slate max-w-none text-slate-800 leading-8">
               {post.content
                 ?.split("\n")
@@ -136,7 +137,7 @@ export default async function PostPage({ params }: PostPageProps) {
         </article>
 
         {/* Comments */}
-        <section className="mt-8 rounded-3xl border border-slate-200/80 bg-white/80 px-6 py-8 shadow-xl backdrop-blur animate-fade-in-up delay-200 sm:px-10">
+        <section className="mt-8 rounded-3xl border border-slate-200/80 bg-white/80 px-4 py-8 shadow-xl backdrop-blur animate-fade-in-up delay-200 sm:px-10">
           <h2 className="mb-6 text-2xl font-bold text-slate-950">
             💬 Bình luận ({comments?.length || 0})
           </h2>
@@ -148,7 +149,10 @@ export default async function PostPage({ params }: PostPageProps) {
               </div>
             ) : (
               <p className="mb-8 rounded-xl bg-violet-50 px-4 py-3 text-sm text-slate-600">
-                <a href="/login" className="font-semibold text-violet-700 hover:underline">
+                <a
+                  href="/login"
+                  className="font-semibold text-violet-700 hover:underline"
+                >
                   Đăng nhập
                 </a>{" "}
                 để tham gia bình luận.
