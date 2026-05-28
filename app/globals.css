@@ -56,6 +56,20 @@ body {
 /* ═══════════════════════════════════════════
    Dark mode component overrides
 ═══════════════════════════════════════════ */
+/* Header — glassmorphism, switches with theme */
+.header-themed {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+  box-shadow: 0 1px 32px rgba(124, 58, 237, 0.07);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+html.dark .header-themed {
+  background: rgba(13, 11, 26, 0.85) !important;
+  border-color: rgba(168, 85, 247, 0.15) !important;
+}
+
 html.dark header {
   background: rgba(13, 11, 26, 0.85) !important;
   border-color: rgba(168, 85, 247, 0.15) !important;
@@ -98,6 +112,31 @@ html.dark ::-webkit-scrollbar-track { background: #1e1b4b; }
 html.dark body {
   background: radial-gradient(ellipse at top, #261854 0%, #1a1535 40%, #120e28 100%);
   background-attachment: fixed;
+}
+
+/* ═══════════════════════════════════════════
+   Auth pages (login / register)
+═══════════════════════════════════════════ */
+.auth-page-bg {
+  background:
+    radial-gradient(circle at top, rgba(59,130,246,0.10), transparent 38%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  transition: background 0.3s ease;
+}
+html.dark .auth-page-bg {
+  background:
+    radial-gradient(circle at top, rgba(124,58,237,0.15), transparent 40%),
+    linear-gradient(180deg, #1a1535 0%, #120e28 100%);
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+html.dark .auth-card {
+  background: rgba(26, 21, 58, 0.92) !important;
+  border-color: rgba(124, 58, 237, 0.25) !important;
 }
 
 /* ═══════════════════════════════════════════
@@ -242,9 +281,8 @@ html.dark .hover\:bg-blue-50:hover   { background-color: rgba(99,102,241,0.15) !
 html.dark .ring-1.ring-slate-200,
 html.dark .ring-1.ring-gray-200 { --tw-ring-color: rgba(124,58,237,0.3); }
 
-/* backdrop blur elements */
-html.dark .backdrop-blur,
-html.dark [style*="backdrop-filter"] {
+/* backdrop blur elements (not header — it uses .header-themed) */
+html.dark .backdrop-blur {
   background: rgba(13, 11, 26, 0.85) !important;
 }
 

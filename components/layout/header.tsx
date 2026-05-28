@@ -154,21 +154,14 @@ export function Header() {
   }
 
   const navLinkClass =
-    "relative font-semibold text-slate-600 hover:text-violet-600 transition-colors after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 after:rounded-full" +
+    "relative font-semibold text-slate-600 dark:text-violet-200 hover:text-violet-600 dark:hover:text-violet-400 transition-colors after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 after:rounded-full" +
     " " + "after:bg-gradient-to-r after:from-violet-600 after:to-pink-500";
   const mobileNavLinkClass =
-    "block w-full px-4 py-3 text-left font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700 rounded-xl transition-colors";
+    "block w-full px-4 py-3 text-left font-semibold text-slate-700 dark:text-violet-200 hover:bg-violet-50 dark:hover:bg-violet-900/30 hover:text-violet-700 dark:hover:text-violet-300 rounded-xl transition-colors";
 
   return (
     <header
-      className="sticky top-0 z-50"
-      style={{
-        background: "rgba(255,255,255,0.85)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(124,58,237,0.1)",
-        boxShadow: "0 1px 32px rgba(124,58,237,0.07)",
-      }}
+      className="sticky top-0 z-50 header-themed"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -295,10 +288,10 @@ export function Header() {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white shadow-lg animate-slide-down">
+        <div className="md:hidden border-t border-gray-100 dark:border-violet-900/30 bg-white dark:bg-[#13102a] shadow-lg animate-slide-down">
           <div className="mx-auto max-w-7xl px-4 py-3 space-y-1">
             {user && (
-              <div className="flex items-center gap-3 px-4 py-3 mb-2 bg-blue-50 rounded-xl">
+              <div className="flex items-center gap-3 px-4 py-3 mb-2 bg-blue-50 dark:bg-violet-900/20 rounded-xl">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blue-600 text-sm font-bold text-white">
                   {avatarUrl ? (
                     <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
@@ -374,7 +367,7 @@ export function Header() {
 
       {/* Notification Panel (Desktop) */}
       {notificationOpen && user && (
-        <div className="absolute right-4 top-17 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl sm:right-6 sm:w-88">
+        <div className="absolute right-4 top-17 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-2xl border border-slate-200 dark:border-violet-800/40 bg-white dark:bg-[#1a1535] p-4 shadow-2xl sm:right-6 sm:w-88">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-semibold text-slate-950">
@@ -445,7 +438,7 @@ export function Header() {
       {/* Toast Notification */}
       {toastNotification && (
         <div className="pointer-events-none fixed right-4 top-20 z-60 w-[calc(100vw-2rem)] max-w-sm sm:right-6 sm:top-24">
-          <div className="pointer-events-auto rounded-2xl border border-blue-200 bg-white p-4 shadow-2xl ring-1 ring-blue-100">
+          <div className="pointer-events-auto rounded-2xl border border-blue-200 dark:border-violet-700/40 bg-white dark:bg-[#1a1535] p-4 shadow-2xl ring-1 ring-blue-100 dark:ring-violet-800/30">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white">
                 !
