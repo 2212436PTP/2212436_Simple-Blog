@@ -39,3 +39,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ── Dọn dẹp trước khi nộp ──────────────────────────────────
+
+# Script tạm (có thể chứa credentials)
+docs/fetch_real_data.mjs
+
+# Dữ liệu thật (chứa UUID / email người dùng thật)
+docs/seed_real.sql
+
+# Script Python tạo báo cáo (không thuộc source code)
+*.py
+
+# File tài liệu Word / Excel / PDF (nộp riêng nếu cần)
+*.docx
+*.xlsx
+*.pdf
+
+# File nén tạm
+docs/*.zip
