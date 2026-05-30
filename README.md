@@ -1,45 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GenZ.Space — Simple Blog
 
-## Getting Started
+Nền tảng blog cộng đồng dành cho GenZ, cho phép đăng bài, bình luận, react và lưu bài viết yêu thích.
 
-First, run the development server:
+## Tech Stack
+
+| Thành phần | Công nghệ |
+|-----------|-----------|
+| Framework | Next.js (App Router) |
+| Database & Auth | Supabase (PostgreSQL + Auth) |
+| Styling | Tailwind CSS |
+| Ngôn ngữ | TypeScript |
+| Deploy | Docker / Vercel |
+
+## Tính năng chính
+
+- 🔐 Đăng ký / Đăng nhập (Email + GitHub OAuth)
+- ✍️ Viết và quản lý bài viết (published / draft)
+- 💬 Bình luận và reply theo thread
+- ❤️ React bài viết và bình luận
+- 🔔 Thông báo real-time
+- 🔖 Lưu bài viết yêu thích
+- 👤 Trang cá nhân người dùng
+- 🕶️ Đăng bài ẩn danh
+
+## Cài đặt & Chạy thử
+
+### 1. Clone và cài dependencies
+
+```bash
+git clone <repo-url>
+cd simple-blog
+npm install
+```
+
+### 2. Cấu hình biến môi trường
+
+```bash
+cp .env.local.example .env.local
+```
+
+Mở `.env.local` và điền thông tin Supabase của bạn:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-public-anon-key
+# Tuỳ chọn — chỉ dùng khi dev local
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+> Lấy key tại: Supabase Dashboard → Project Settings → API
+
+### 3. Khởi tạo Database
+
+Chạy các script sau trong **Supabase SQL Editor** theo thứ tự:
+
+1. `docs/schema.sql` — Tạo bảng, Index, RLS Policies, Storage Buckets
+2. `docs/seed.sql` _(tuỳ chọn)_ — Thêm dữ liệu mẫu để demo
+
+### 4. Chạy Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở [http://localhost:3000](http://localhost:3000) để xem kết quả.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Build Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Chạy bằng Docker
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker-compose up --build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Cấu trúc thư mục
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+simple-blog/
+├── app/                  # Next.js App Router pages
+│   ├── (auth)/           # Login, Register
+│   ├── blog/             # Danh sách bài viết
+│   ├── posts/            # Chi tiết & tạo bài viết
+│   └── profile/          # Trang cá nhân
+├── components/           # React components dùng chung
+├── lib/                  # Supabase client, utilities
+├── types/                # TypeScript type definitions
+├── migrations/           # Lịch sử migration DB
+├── docs/
+│   ├── schema.sql        # Script tạo DB (schema thực tế)
+│   └── seed.sql          # Dữ liệu mẫu
+└── public/               # Static assets
+```
 
-## Deploy on Vercel
+## Tài khoản test (sau khi chạy seed.sql)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+> Seed data chỉ là dữ liệu giả. Tạo tài khoản mới qua trang `/register`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Supabase Service Role Key
 
-## Supabase service role (local/dev only)
+Nếu gặp lỗi `email rate limit exceeded` khi đăng ký trong môi trường dev:
 
-If you hit `email rate limit exceeded` during sign-up in development, you can provide a Supabase service role key for a temporary server-side fallback.
+1. Copy `.env.local.example` → `.env.local`
+2. Điền `SUPABASE_SERVICE_ROLE_KEY` (chỉ dùng local, **không commit**)
 
-1. Copy `.env.local.example` to `.env.local`.
-2. Set `SUPABASE_SERVICE_ROLE_KEY` (do NOT commit this key).
+Fallback này chỉ kích hoạt khi `NODE_ENV !== "production"`.
 
-This fallback is only used when `NODE_ENV !== "production"`.
+---
+
+*Dự án được phát triển cho môn học tại Đại học Đà Lạt.*
